@@ -44,7 +44,17 @@ h1{font:800 22px/1.1 var(--display);margin:0 0 4px;text-wrap:balance}
 .btn.on-gm{background:var(--violet);color:#160b2e;border-color:var(--violet)}
 .acts .sep{flex:1}
 .btn.on-no{background:var(--mute);color:#0f1512;border-color:var(--mute)}
-.head{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;cursor:pointer;width:100%;background:transparent;border:0;color:inherit;text-align:left;font:inherit}
+.head{padding:8px 12px 10px}
+.hb{display:flex;gap:8px;align-items:flex-start;cursor:pointer;width:100%;background:transparent;border:0;color:inherit;text-align:left;font:inherit;padding:0}
+.raters{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;padding-left:38px}
+.rt{display:flex;align-items:center;gap:3px}
+.rt .who{font:700 11px var(--display);color:var(--mute);min-width:44px}
+.btn.sm{padding:3px 8px;font-size:11.5px;min-width:30px}
+.st.diff{background:transparent;border:1px solid var(--rose);color:var(--rose)}
+.st.un{background:transparent;border:1px solid var(--mute);color:var(--mute)}
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.notes label{display:flex;flex-direction:column;gap:3px;font:700 11px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--amber)}
+.notes textarea{width:100%;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;font:13.5px var(--body);resize:vertical;min-width:0}
 .head .t{flex:1;min-width:0}
 .num{flex:none;min-width:30px;height:30px;padding:0 6px;border-radius:7px;background:var(--bg);color:var(--amber);font:800 13px/30px var(--display);text-align:center;font-variant-numeric:tabular-nums}
 .gn{display:inline-block;font:700 10.5px var(--display);color:var(--amber);background:var(--bg);border-radius:5px;padding:1px 5px;margin-right:3px;font-variant-numeric:tabular-nums}
@@ -69,7 +79,7 @@ details ul li{break-inside:avoid}
 .acts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:var(--panel2);color:var(--fg);border-radius:6px;padding:6px 10px;font:600 12px var(--body);cursor:pointer}
 .btn.p{background:var(--amber);color:#1a1200;border-color:var(--amber)}
-.btn:focus-visible,.tab:focus-visible,.head:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.btn:focus-visible,.tab:focus-visible,.hb:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 .empty{color:var(--mute);padding:20px 0;text-align:center}
 .kit .ki{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}
 .kit .ki label{display:flex;gap:8px;flex:1;min-width:0;cursor:pointer}
@@ -86,7 +96,7 @@ details ul li{break-inside:avoid}
 .tv .tt b{font:700 11px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:2px}
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--amber);color:#1a1200;font:600 13px var(--body);padding:8px 14px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
-@media (max-width:420px){.row{grid-template-columns:1fr}.k{padding-top:0}details ul{columns:1}}
+@media (max-width:420px){.row{grid-template-columns:1fr}.k{padding-top:0}details ul{columns:1}.raters{padding-left:0}.notes{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.chev,.toast{transition:none}}
 </style>
 
@@ -103,11 +113,19 @@ details ul li{break-inside:avoid}
     <option value="y">GMs play</option>
     <option value="n">GMs sit out</option>
   </select>
-  <select id="pri" aria-label="Priority filter">
-    <option value="">All priorities</option>
-    <option value="1">1 only</option>
-    <option value="2">2 only</option>
-    <option value="3">3 only</option>
+  <select id="pri" aria-label="Mathu score filter">
+    <option value="">Mathu: all</option>
+    <option value="1">Mathu 1</option>
+    <option value="2">Mathu 2</option>
+    <option value="3">Mathu 3</option>
+  </select>
+  <select id="prin" aria-label="Nikhil score filter">
+    <option value="">Nikhil: all</option>
+    <option value="1">Nikhil 1</option>
+    <option value="2">Nikhil 2</option>
+    <option value="3">Nikhil 3</option>
+    <option value="no">Nikhil No</option>
+    <option value="un">Nikhil unrated</option>
   </select>
   <select id="fmt" aria-label="Format filter">
     <option value="">All formats</option>
@@ -123,7 +141,7 @@ details ul li{break-inside:avoid}
 <div class="wrap">
   <div id="viewShort">
     <h1>Janda Baik Games Night</h1>
-    <p class="sub">Sat 24 Oct · 12 players · indoor · no drinking · kids 10 & 8 in every game. Priority 1 = locked, 2 = in, 3 = if time. GM toggle on each card says whether Nikhil & Mathu play or run it.</p>
+    <p class="sub">Sat 24 Oct · 12 players · indoor · no drinking · kids 10 & 8 in every game. Mathu's score decides the tab, Nikhil's rides along. 1 = locked, 2 = in, 3 = if time. Score buttons sit on the collapsed card, rationale boxes inside.</p>
     <div id="shortList"></div>
   </div>
   <div id="viewNo" hidden>
@@ -143,7 +161,7 @@ details ul li{break-inside:avoid}
   </div>
   <div id="viewKit" hidden>
     <h1>Kit</h1>
-    <p class="sub">Compiles from the live shortlist. Tick as you shop, assign an owner per line.</p>
+    <p class="sub">Compiles from Mathu's 1/2/3. Tick as you shop, assign an owner per line.</p>
     <div class="grp">Buy</div>
     <div class="kit" id="kitBuy"></div>
     <div class="grp">From the house / bring</div>
@@ -800,33 +818,45 @@ const DEF={water:"2",lick:"2",cup:"2",song:"2",charades:"2",laser:"2",snack:"2",
  noise:"3",camouflage:"3",looroll:"3",soundid:"3",gibberish:"3",
  imposter:"no",chamcham:"no",wavelength:"no",eatrun:"no",cantower:"no",sandwich:"no",ofcourse:"no",story:"no",readback:"no",watermelon:"no"};
 G.forEach((g,i)=>g.n=i+1); // stable card number, order of the data file
-// round 4, export 21 Oct 00:31: priority 1s
+// Nikhil's scores (export 21 Oct 00:31). DEF above is his full set; this layer adds his P1s.
 Object.assign(DEF,{water:"1",lick:"1",charades:"1",snack:"1",emoji:"1",family:"1",feud:"1",newlywed:"1",spaghetti:"1"});
-const KEY="jb-games-v7";
-let st={status:{},kit:{},open:{},own:{},team:{},gm:{}};
+const DEF_N=DEF;
+// Mathu's scores (export 21 Oct 07:51). Primary: decides which tab a card sits in.
+const DEF_M={cup:"1",family:"1",newlywed:"1",codenames:"1",stopbus:"1",noise:"1",
+ lick:"2",feud:"2",whisper:"2",pyramid:"2",looroll:"2",gibberish:"2",
+ wilty:"3",headdraw:"3",wink:"3",
+ charades:"",price:"",beatparents:"",kahoot:"",soundid:""};
+G.forEach(g=>{if(DEF_M[g.id]===undefined)DEF_M[g.id]="no"});
+const KEY="jb-games-v8";
+let st={m:{},nk:{},noteM:{},noteN:{},kit:{},open:{},own:{},team:{},gm:{}};
 try{st=Object.assign(st,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
-const status=g=>st.status[g.id]!==undefined?st.status[g.id]:(DEF[g.id]||"");
+const score=(g,w)=>w==="m"?(st.m[g.id]!==undefined?st.m[g.id]:(DEF_M[g.id]||"")):(st.nk[g.id]!==undefined?st.nk[g.id]:(DEF_N[g.id]||""));
+const status=g=>score(g,"m"); // Mathu's score drives tabs, kit and sorting
 const TAG={viral:"Viral",tm:"Taskmaster"};
 const tagOf=g=>g.tag||(g.src==="viral"?"viral":"");
 const ORDER={"1":0,"2":1,"3":2,"":3,no:4};
 const IN=s=>s==="1"||s==="2"||s==="3";
 const gmPlays=g=>st.gm[g.id]!==undefined?st.gm[g.id]:(g.gm!==false);
-const sortS=a=>a.slice().sort((x,y)=>ORDER[status(x)]-ORDER[status(y)]);
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
 let tab="short";
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const SLAB={"1":"1","2":"2","3":"3",no:"No"};const PCLS={"1":"p1","2":"p2","3":"p3",no:"no"};
-function badge(g){const s=status(g),t=tagOf(g);return (s?`<span class="st ${PCLS[s]}">${s==="no"?"No":"P"+s}</span>`:"")+`<span class="st ${gmPlays(g)?"gm":"gmno"}">${gmPlays(g)?"GMs play":"GMs run it"}</span>`+`<span class="b ${g.fmt}">${FMT[g.fmt]}</span>`+(t?`<span class="b ${t}">${TAG[t]}</span>`:"")+`<span class="b time">${esc(g.time)}</span><span class="b src">${SRC[g.src]}</span>`}
+const lab=s=>s===""?"—":s==="no"?"No":"P"+s;
+function badge(g){const t=tagOf(g);return `<span class="st ${gmPlays(g)?"gm":"gmno"}">${gmPlays(g)?"GMs play":"GMs run it"}</span><span class="b ${g.fmt}">${FMT[g.fmt]}</span>`+(t?`<span class="b ${t}">${TAG[t]}</span>`:"")+`<span class="b time">${esc(g.time)}</span><span class="b src">${SRC[g.src]}</span>`}
+function rater(g,w,name){const s=score(g,w);return `<div class="rt"><span class="who">${name}</span>${["1","2","3","no"].map(k=>`<button class="btn sm ${s===k?"on-"+k:""}" data-act="rate" data-who="${w}" data-val="${k}" data-id="${g.id}" aria-pressed="${s===k}">${SLAB[k]}</button>`).join("")}</div>`}
 function row(k,v,cls=""){return v?`<div class="row"><div class="k">${k}</div><div class="v ${cls}">${v}</div></div>`:""}
 function ul(a){return a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
 function card(g){
-  const s=status(g);
+  const s=status(g),sn=score(g,"nk");
   const cls=["card",s?"s-"+s:"",st.open[g.id]?"open":""].join(" ");
   const needs=[...g.buy.map(x=>"Buy: "+x),...g.house];
-  const acts=["1","2","3","no"].map(k=>`<button class="btn ${s===k?"on-"+k:""}" data-act="rate" data-val="${k}" data-id="${g.id}" aria-pressed="${s===k}">${SLAB[k]}</button>`).join("")+`<span class="sep"></span><button class="btn ${gmPlays(g)?"on-gm":""}" data-act="gm" data-id="${g.id}" aria-pressed="${gmPlays(g)}">${gmPlays(g)?"GMs play":"GMs sit out"}</button>`;
+  const split=s!==sn?`<span class="st diff" title="Mathu ${lab(s)} / Nikhil ${lab(sn)}">M ${lab(s)} · N ${lab(sn)}</span>`:`<span class="st ${PCLS[s]||"un"}">Both ${lab(s)}</span>`;
   return `<div class="${cls}" id="c-${g.id}">
-    <button class="head" data-act="toggle" data-id="${g.id}" aria-expanded="${!!st.open[g.id]}"><span class="num">${g.n}</span><div class="t"><span class="name">${esc(g.name)}</span><div class="badges">${badge(g)}</div></div><span class="chev">›</span></button>
+    <div class="head">
+      <button class="hb" data-act="toggle" data-id="${g.id}" aria-expanded="${!!st.open[g.id]}"><span class="num">${g.n}</span><div class="t"><span class="name">${esc(g.name)}</span><div class="badges">${split}${badge(g)}</div></div><span class="chev">›</span></button>
+      <div class="raters">${rater(g,"m","Mathu")}${rater(g,"nk","Nikhil")}</div>
+    </div>
     <div class="body">
       ${row("Needs",ul(needs),"m")}
       ${row("Setup",esc(g.setup))}
@@ -835,12 +865,16 @@ function card(g){
       ${g.prep.length?row("Prep",ul(g.prep),"m"):""}
       ${row("GM note",esc(g.note),"m")}
       ${g.list?`<details><summary>${esc(g.list.t)}</summary><ul>${g.list.i.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></details>`:""}
-      <div class="acts">${acts}</div>
+      <div class="notes">
+        <label>Mathu's take<textarea data-note="m" data-id="${g.id}" rows="2" placeholder="Why this score">${esc(st.noteM[g.id]||"")}</textarea></label>
+        <label>Nikhil's take<textarea data-note="nk" data-id="${g.id}" rows="2" placeholder="Why this score">${esc(st.noteN[g.id]||"")}</textarea></label>
+      </div>
+      <div class="acts"><button class="btn ${gmPlays(g)?"on-gm":""}" data-act="gm" data-id="${g.id}" aria-pressed="${gmPlays(g)}">${gmPlays(g)?"GMs play":"GMs sit out"}</button></div>
     </div></div>`;
 }
 function filt(list){
-  const f=$("#fmt").value,q=$("#q").value.trim().toLowerCase(),gf=$("#gmf").value,pf=$("#pri").value;
-  return list.filter(g=>(!f||g.fmt===f)&&(!gf||gmPlays(g)===(gf==="y"))&&(!pf||status(g)===pf)&&(!q||JSON.stringify(g).toLowerCase().includes(q)));
+  const f=$("#fmt").value,q=$("#q").value.trim().toLowerCase(),gf=$("#gmf").value,pf=$("#pri").value,nf=$("#prin").value;
+  return list.filter(g=>(!f||g.fmt===f)&&(!gf||gmPlays(g)===(gf==="y"))&&(!pf||status(g)===pf)&&(nf===""||score(g,"nk")===(nf==="un"?"":nf))&&(!q||JSON.stringify(g).toLowerCase().includes(q)));
 }
 const IDEA_ORDER=["ind","cpl","t4","t3","t2"];
 const nameOf=n=>(G.find(g=>g.n===n)||{}).name||"";
@@ -886,10 +920,10 @@ document.addEventListener("click",e=>{
   if(t.dataset.tab){tab=t.dataset.tab;render();window.scrollTo(0,0);return}
   const id=t.dataset.id,a=t.dataset.act;
   if(a==="toggle"){st.open[id]=!st.open[id];save();$("#c-"+id).classList.toggle("open",st.open[id]);t.setAttribute("aria-expanded",!!st.open[id]);return}
-  if(a==="rate"){const g=G.find(x=>x.id===id);st.status[id]=(status(g)===t.dataset.val)?"":t.dataset.val}
+  if(a==="rate"){const g=G.find(x=>x.id===id),w=t.dataset.who,cur=score(g,w),v=cur===t.dataset.val?"":t.dataset.val;(w==="m"?st.m:st.nk)[id]=v}
   if(a==="gm"){const g=G.find(x=>x.id===id);st.gm[id]=!gmPlays(g)}
   if(a==="pickteam"){st.team[t.dataset.fmt]=st.team[t.dataset.fmt]===id?"":id}
-  if(t.id==="reset"){st={status:{},kit:{},open:{},own:{},team:{},gm:{}}}
+  if(t.id==="reset"){st={m:{},nk:{},noteM:{},noteN:{},kit:{},open:{},own:{},team:{},gm:{}}}
   if(t.id==="copyAll"){copy(runText());return}
   if(t.id==="exportTxt"){const x=exportText();$("#exportTa").value=x;$("#exportBox").hidden=false;copy(x);download("janda-baik-games.txt",x);return}
   save();render();
@@ -898,24 +932,29 @@ document.addEventListener("change",e=>{
   if(e.target.dataset.kit){st.kit[e.target.dataset.kit]=e.target.checked;save();e.target.closest("label").classList.toggle("done",e.target.checked)}
   if(e.target.dataset.own!==undefined){st.own[e.target.dataset.own]=e.target.value;save()}
 });
+document.addEventListener("input",e=>{
+  if(e.target.dataset.note){(e.target.dataset.note==="m"?st.noteM:st.noteN)[e.target.dataset.id]=e.target.value;save()}
+});
 function download(name,txt){try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/plain"}));a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a)}catch(e){}}
 function exportText(){
   const d=new Date().toISOString().slice(0,16).replace("T"," ");
   const L=["JANDA BAIK GAMES NIGHT — EXPORT "+d,""];
-  L.push("GAME STATUS");
-  G.forEach(g=>L.push(`${g.n} | ${g.id} | ${g.name} | ${status(g)||"unrated"} | ${gmPlays(g)?"GMs play":"GMs run"}`));
+  L.push("GAME STATUS (# | id | name | Mathu | Nikhil | GMs)");
+  G.forEach(g=>L.push(`${g.n} | ${g.id} | ${g.name} | ${status(g)||"unrated"} | ${score(g,"nk")||"unrated"} | ${gmPlays(g)?"play":"run"}`));
+  L.push("","NOTES");
+  G.forEach(g=>{const m=(st.noteM[g.id]||"").trim(),n=(st.noteN[g.id]||"").trim();if(m||n){L.push(`#${g.n} ${g.name}`);if(m)L.push(`  Mathu: ${m}`);if(n)L.push(`  Nikhil: ${n}`)}});
   L.push("","TEAM PICKS");
   TEAMS.forEach(T=>{const v=T.vars.find(v=>v.id===st.team[T.fmt]);L.push(`${T.title}: ${v?v.name+" — "+v.teams.map(t=>t.join("/")).join(" vs "):"not picked"}`)});
-  L.push("","KIT (status | owner | games | item)");
+  L.push("","KIT (status | owner | games | item) — from Mathu's 1/2/3");
   const live=G.filter(g=>IN(status(g)));
   [["b","buy","BUY"],["h","house","HOUSE"],["p","prep","PREP"]].forEach(([id,f,lab])=>{L.push("-- "+lab);kitRows(live,f).forEach(r=>{const k=id+"|"+r.item;L.push(`${st.kit[k]?"[x]":"[ ]"} | ${st.own[k]||"-"} | #${r.n.join(" #")} | ${r.item}`)})});
   L.push("","STATE JSON");L.push(JSON.stringify(st));
   return L.join("\n");
 }
-$("#fmt").addEventListener("change",render);$("#gmf").addEventListener("change",render);$("#pri").addEventListener("change",render);$("#q").addEventListener("input",render);
+["#fmt","#gmf","#pri","#prin"].forEach(x=>$(x).addEventListener("change",render));$("#q").addEventListener("input",render);
 function runText(){
   const live=G.filter(g=>IN(status(g))).sort((a,b)=>ORDER[status(a)]-ORDER[status(b)]||a.n-b.n);
-  return "JANDA BAIK GAMES NIGHT\n"+live.map(g=>`P${status(g)} #${g.n} ${g.name} (${FMT[g.fmt]}, ${g.time}${gmPlays(g)?"":", GMs run"})`).join("\n")+"\n\nBUY\n"+kitRows(live,"buy").map(r=>`- ${r.item} (#${r.n.join(" #")})`).join("\n");
+  return "JANDA BAIK GAMES NIGHT\n"+live.map(g=>`M${status(g)}/N${score(g,"nk")||"-"} #${g.n} ${g.name} (${FMT[g.fmt]}, ${g.time}${gmPlays(g)?"":", GMs run"})`).join("\n")+"\n\nBUY\n"+kitRows(live,"buy").map(r=>`- ${r.item} (#${r.n.join(" #")})`).join("\n");
 }
 function copy(txt){
   const done=()=>toast("Copied");
